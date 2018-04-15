@@ -1,0 +1,1 @@
+Just a simple example of a shop cart using typescript
