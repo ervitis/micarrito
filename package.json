@@ -4,7 +4,7 @@
   "description": "carrito compra",
   "main": "index.js",
   "scripts": {
-    "start": "tsc && node src/index.js",
+    "start": "tsc && node dist/index.js",
     "test": "jest"
   },
   "author": "ervitis",
@@ -16,6 +16,7 @@
     "body-parser": "1.18.2",
     "config": "1.30.0",
     "express": "4.16.3",
+    "supertest": "3.0.0",
     "typescript": "2.8.1"
   },
   "devDependencies": {
