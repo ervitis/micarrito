@@ -10,10 +10,10 @@ export class Container {
     this.container = createContainer()
 
     this.container.register({
-      app: asClass(Application, {lifetime: Lifetime.SINGLETON}),
-      server: asClass(Server, {lifetime: Lifetime.SINGLETON}),
-      //router: asFunction(router, {lifetime: Lifetime.SINGLETON}),
-      //logger: asFunction(logger, {lifetime: Lifetime.SINGLETON}),
+      app: asClass(Application, { lifetime: Lifetime.SINGLETON }),
+      server: asClass(Server, { lifetime: Lifetime.SINGLETON }),
+      //router: asFunction(router, { lifetime: Lifetime.SINGLETON }),
+      //logger: asFunction(logger, { lifetime: Lifetime.SINGLETON }),
       config: asValue(config)
     })
   }
