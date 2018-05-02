@@ -3,7 +3,9 @@ import * as config from 'config'
 import { Application } from '../app/Application'
 
 export class Container {
-  constructor (readonly container?) {
+  private readonly container
+
+  constructor () {
     this.container = createContainer()
 
     this.container.register({
