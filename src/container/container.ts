@@ -1,6 +1,7 @@
 import { asClass, asFunction, asValue, createContainer, Lifetime } from 'awilix'
 import * as config from 'config'
 import { Application } from '../app/Application'
+import { Server } from '../input_interfaces/http/Server'
 
 export class Container {
   private readonly container
@@ -10,7 +11,7 @@ export class Container {
 
     this.container.register({
       app: asClass(Application, {lifetime: Lifetime.SINGLETON}),
-      //server: asClass(Server, {lifetime: Lifetime.SINGLETON}),
+      server: asClass(Server, {lifetime: Lifetime.SINGLETON}),
       //router: asFunction(router, {lifetime: Lifetime.SINGLETON}),
       //logger: asFunction(logger, {lifetime: Lifetime.SINGLETON}),
       config: asValue(config)
