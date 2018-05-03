@@ -11,13 +11,14 @@ export class Container {
   constructor () {
     this.container = createContainer()
 
-    this.container.register({
-      app: asClass(Application, { lifetime: Lifetime.SINGLETON }),
-      server: asClass(Server, { lifetime: Lifetime.SINGLETON }),
-      router: asClass(Router, { lifetime: Lifetime.SINGLETON }),
-      logger: asClass(Logger, { lifetime: Lifetime.SINGLETON }),
-      config: asValue(config)
-    })
+    this.container
+      .register({
+        app: asClass(Application, { lifetime: Lifetime.SINGLETON }),
+        server: asClass(Server, { lifetime: Lifetime.SINGLETON }),
+        router: asClass(Router, { lifetime: Lifetime.SINGLETON }),
+        logger: asClass(Logger, { lifetime: Lifetime.SINGLETON }),
+        config: asValue(config)
+      })
   }
 
   resolve (appName: string) {
