@@ -1,5 +1,4 @@
 import { get } from 'lodash'
-import { DateTime } from 'luxon'
 import * as winston from 'winston'
 
 export class Logger {
