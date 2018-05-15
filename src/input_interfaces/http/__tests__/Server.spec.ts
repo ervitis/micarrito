@@ -12,7 +12,7 @@ describe('Server test', () => {
   }
 
   test('Constructor', () => {
-    const server = new Server(config, logger, router)
+    const server = new Server({ config, logger, router })
 
     expect(server.app).toBeTruthy()
     expect(logger.info).not.toHaveBeenCalled()
@@ -22,7 +22,7 @@ describe('Server test', () => {
     let server
 
     beforeEach(async () => {
-      server = new Server(config, logger, router)
+      server = new Server({ config, logger, router })
       await server.start()
     })
 

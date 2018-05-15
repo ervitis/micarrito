@@ -6,6 +6,9 @@ module.exports = {
     "^.+\\.tsx?$": "ts-jest"
   },
   "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.tsx?$",
+  "modulePathIgnorePatterns": [
+    "/__mocks__/.*"
+  ],
   "moduleFileExtensions": [
     "ts",
     "tsx",

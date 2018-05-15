@@ -3,12 +3,18 @@ import * as terminus from '@godaddy/terminus'
 import * as express from 'express'
 
 export class Server {
-  public readonly app
+  public app
   private readonly server
+  private readonly config
+  private readonly logger
+  private readonly router
 
-  constructor (private config, private logger, private router) {
+  constructor ({ config, logger, router }) {
     this.app = express()
 
+    this.config = config
+    this.logger = logger
+    this.router = router
     this.app.disable('x-powered-by')
     this.app.use(this.router)
 

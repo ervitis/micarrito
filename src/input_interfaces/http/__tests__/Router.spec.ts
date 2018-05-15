@@ -1,20 +1,24 @@
 import * as express from 'express'
 import * as supertest from 'supertest'
-import { Router } from '../Router'
+import router from '../Router'
 
 describe('Router', () => {
   let request
   const mockResponse = (req, res) => res.send()
+  const mockMiddleware = (req, res) => res.send()
 
   beforeEach(() => {
     const app = express()
-    const router = new Router().router
+    const myRouter = router({
+      containerMiddleware: mockMiddleware,
+      errorMiddleware: mockMiddleware,
+    })
 
-    router.get('/ping', (req, res) => {
+    myRouter.get('/ping', (req, res) => {
       res.status(200).send({status: 'ok'})
     })
 
-    app.use(router)
+    app.use(myRouter)
 
     request = supertest(app)
   })
