@@ -1,40 +1,23 @@
 import { get } from 'lodash'
 import * as winston from 'winston'
 
-export class Logger {
-  public readonly level
-  private readonly logger
+const logger = ({ config }) => {
+  return new winston.Logger({
+    levels: { error: 0, warn: 1, info: 2, debug: 3 },
+    level: get(config, 'logger.level', 'info'),
+    transports: [
+      new winston.transports.Console({
+        json: get(config, 'logger.json', false),
+        colorize: false,
+        stringify: (obj) => JSON.stringify(obj),
+        timestamp: new Date().toISOString(),
+        handleExceptions: true,
+        humanReadableUnhandledException: true
+      })
+    ],
+    exitOnError: false
+  })
 
-  constructor (private config) {
-    this.level = get(config, 'logger.level', 'info')
-    const isJsonOutput = get(config, 'logger.format') === 'json'
-
-    this.logger = new winston.Logger({
-      transports: [
-        new winston.transports.Console({
-          json: isJsonOutput,
-          colorize: !isJsonOutput,
-          handleExceptions: true,
-          humanReadableUnhandledException: true,
-          level: this.level
-        })
-      ]
-    })
-  }
-
-  _formatMessage (component: string, traceid: string, code: number, message: string) {
-    return {
-      component: component,
-      traceid: traceid,
-      code: code,
-      message: message,
-      timestamp: new Date().toISOString()
-    }
-  }
-
-  write (component: string, traceid: string, code: number, message: string) {
-    this.logger.log({
-      message: this._formatMessage(component, traceid, code, message)
-    })
-  }
 }
+
+export default logger

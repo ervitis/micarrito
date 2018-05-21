@@ -1,5 +1,8 @@
 export class Application {
-  constructor (private server, private logger) {
+  private readonly server
+  private readonly logger
+
+  constructor ({ server, logger }) {
     this.server = server
     this.logger = logger
   }

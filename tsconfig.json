@@ -5,9 +5,12 @@
     "lib": ["es2015", "es2016", "es2017"],
     "target": "es6",
     "outDir": "dist",
-    "sourceMap": false
+    "sourceMap": false,
+    "types": ["node", "glob", "jest"]
   },
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "**/*.spec.ts",
+    "**/__mocks__/**"
   ]
 }

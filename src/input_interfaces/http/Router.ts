@@ -2,19 +2,19 @@ import * as express from 'express'
 import * as bodyParser from 'body-parser'
 import { loadControllers } from 'awilix-express'
 
-export class Router {
-  public readonly router
-  private readonly apiRouter
+const router = ({ containerMiddleware }) => {
+  const router = express.Router()
+  const apiRouter = express.Router()
 
-  constructor () {
-    this.router = express.Router()
-    this.apiRouter = express.Router()
+  apiRouter
+    .use(containerMiddleware)
+    .use(loadControllers('controllers/**/*Controller.js', { cwd: __dirname }))
 
-    this.apiRouter
-      .use(loadControllers('controllers/**/*Controller.js', { cwd: __dirname }))
+  router
+    .use(bodyParser.json())
+    .use('/api', apiRouter)
 
-    this.router
-      .use(bodyParser.json())
-      .use('/api', this.apiRouter)
-  }
+  return router
 }
+
+export default router

@@ -12,7 +12,7 @@ describe('Application test', () => {
     const logger = {
       info: jest.fn(() => {})
     }
-    const myApp = new app.Application(server, logger)
+    const myApp = new app.Application({ server, logger })
     myApp.start()
     expect(server.start).toHaveBeenCalled()
   })

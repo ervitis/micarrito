@@ -2,8 +2,11 @@ import { asClass, asFunction, asValue, createContainer, Lifetime } from 'awilix'
 import * as config from 'config'
 import { Application } from '../app/Application'
 import { Server } from '../input_interfaces/http/Server'
-import { Router } from '../input_interfaces/http/Router'
-import { Logger } from '../infra/logger/Logger'
+import logger from '../infra/logger/Logger'
+import router from '../input_interfaces/http/Router'
+import { CartService } from '../input_interfaces/http/services/CartService'
+import { scopePerRequest } from 'awilix-express'
+import { CartRepository } from '../app/queries/CartRepository'
 
 export class Container {
   private readonly container
@@ -15,15 +18,22 @@ export class Container {
       .register({
         app: asClass(Application, { lifetime: Lifetime.SINGLETON }),
         server: asClass(Server, { lifetime: Lifetime.SINGLETON }),
-        router: asClass(Router, { lifetime: Lifetime.SINGLETON }),
-        logger: asClass(Logger, { lifetime: Lifetime.SINGLETON }),
-        config: asValue(config)
+        router: asFunction(router, { lifetime: Lifetime.SINGLETON }),
+        logger: asFunction(logger, { lifetime: Lifetime.SINGLETON })
+      })
+      .register({
+        cartService: asClass(CartService, { lifetime: Lifetime.SINGLETON }),
+        cartRepository: asClass(CartRepository, { lifetime: Lifetime.SCOPED })
+      })
+
+    this.container
+      .register({
+        config: asValue(config),
+        containerMiddleware: asValue(scopePerRequest(this.container))
       })
   }
 
   resolve (appName: string) {
-    this.container.resolve(appName)
-
-    return this.container
+    return this.container.resolve(appName)
   }
 }
