@@ -7,7 +7,7 @@ const logger = ({ config }) => {
     level: get(config, 'logger.level', 'info'),
     transports: [
       new winston.transports.Console({
-        json: true,
+        json: get(config, 'logger.json', false),
         colorize: false,
         stringify: (obj) => JSON.stringify(obj),
         timestamp: new Date().toISOString(),
@@ -18,17 +18,6 @@ const logger = ({ config }) => {
     exitOnError: false
   })
 
-    /*
-  _formatMessage (component: string, traceid: string, code: number, message: string) {
-      return {
-        component: component,
-        traceid: traceid,
-        code: code,
-        message: message,
-        timestamp: new Date().toISOString()
-      }
-    }
-    */
 }
 
 export default logger

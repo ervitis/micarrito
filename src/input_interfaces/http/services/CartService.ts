@@ -1,28 +1,18 @@
-import { Operation } from '../../../app/Operation'
 
-export class CartService extends Operation {
+export class CartService {
   private cartRepository
 
   constructor ({ cartRepository }) {
-    super()
-
     this.cartRepository = cartRepository
-    this._setOutputs(['SUCCESS', 'ERROR'])
   }
 
   async execute () {
-    const { SUCCESS, ERROR } = this.outputs
-
     try {
-      const data = await this.cartRepository.getAll()
-
-      this.emit(SUCCESS, data)
+      const data = await this.cartRepository.repositoryGetAllItems()
+      return data
     } catch (err) {
-      this.emit(ERROR, err)
+      throw err
     }
-  }
 
-  _setOutputs (outputs) {
-    Operation.setOutputs(outputs)
   }
 }

@@ -7,8 +7,6 @@ import router from '../input_interfaces/http/Router'
 import { CartService } from '../input_interfaces/http/services/CartService'
 import { scopePerRequest } from 'awilix-express'
 import { CartRepository } from '../app/queries/CartRepository'
-import errorMiddleware from '../input_interfaces/middlewares/ErrorMiddleware'
-import errorHandler from '../input_interfaces/middlewares/ErrorHandler'
 
 export class Container {
   private readonly container
@@ -25,9 +23,7 @@ export class Container {
       })
       .register({
         cartService: asClass(CartService, { lifetime: Lifetime.SINGLETON }),
-        cartRepository: asClass(CartRepository, { lifetime: Lifetime.SCOPED }),
-        errorMiddleware: asFunction(errorMiddleware, { lifetime: Lifetime.SINGLETON }),
-        errorHandler: asFunction(errorHandler, { lifetime: Lifetime.SINGLETON })
+        cartRepository: asClass(CartRepository, { lifetime: Lifetime.SCOPED })
       })
 
     this.container

@@ -1,5 +1,5 @@
 import * as express from 'express'
-import { asValue, createContainer } from 'awilix'
+import { asFunction, asValue, createContainer } from 'awilix'
 import { INTERNAL_SERVER_ERROR } from 'http-status-codes'
 import * as bodyParser from 'body-parser'
 import { controller, scopePerRequest } from 'awilix-express'
@@ -9,17 +9,12 @@ import * as request from 'supertest'
 
 describe('CartController', () => {
   let app, container
+  let logger
 
   beforeEach(() => {
     app = express()
     container = createContainer()
 
-    app.use((req, res, next) => {
-      res.sendInternalServerError = (msg) => () => res.status(INTERNAL_SERVER_ERROR).send(msg)
-      res.sendError = (err) => res.status(err.code).send()
-
-      return next()
-    })
     app
       .use(bodyParser.json())
       .use(scopePerRequest(container))
@@ -28,6 +23,11 @@ describe('CartController', () => {
     container.register({
       cartService: asValue({})
     })
+
+    logger = {
+      info: jest.fn(() => {}),
+      error: jest.fn(() => {})
+    }
   })
 
   afterEach(() => {
@@ -35,13 +35,18 @@ describe('CartController', () => {
   })
 
   test('Get all items', done => {
-    const items = [
+    const someItems = [
       { id: 1, productName: 'Knife', quantity: 2, price: 20.20 },
       { id: 2, productName: 'Spoon', quantity: 1, price: 15.0 }
     ]
-    const operation = mockCartService('SUCCESS', items)
+
+    const cartService = {
+      execute: jest.fn(() => someItems)
+    }
+
     container.register({
-      cartService: asValue(operation)
+      cartService: asValue(cartService),
+      logger: asValue(logger)
     })
 
     request(app)
@@ -49,27 +54,30 @@ describe('CartController', () => {
       .expect(200)
       .end((err, res) => {
         expect(err).toBeFalsy()
-        expect(operation.execute).toHaveBeenCalled()
-        expect(operation.fns['SUCCESS']).toHaveBeenCalledWith(items)
+        const { items } = res.body
+        expect(items).toMatchSnapshot()
 
         done()
       })
   })
 
   test('Handle error', done => {
-    const operation = mockCartService('ERROR', { err: 'Something went wrong' })
+    const cartService = {
+      execute: jest.fn(() => {
+        throw Error('ups')
+      })
+    }
     container.register({
-      cartService: asValue(operation)
+      cartService: asValue(cartService),
+      logger: asValue(logger)
     })
 
     request(app)
       .get('/cart/items')
       .expect(INTERNAL_SERVER_ERROR)
       .end((err, res) => {
-        expect(err).toBeTruthy()
-        expect(operation.execute).toHaveBeenCalled()
-        expect(operation.fns['ERROR']).toHaveBeenCalled()
-
+        expect(res).toBeTruthy()
+        expect(res.body).toMatchSnapshot()
         done()
       })
   })
